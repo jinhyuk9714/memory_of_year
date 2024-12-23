@@ -11,7 +11,7 @@
 - **MySQL**을 이용한 데이터베이스 관리
 - **Swagger**를 통한 API 문서화 및 테스트
 - **AWS EC2**에서 애플리케이션 호스팅
-- **IAM (Identity and Access Management)**으로 AWS 리소스 접근 제어
+- **AWS IAM**으로 AWS 리소스 접근 제어
 
 ---
 
