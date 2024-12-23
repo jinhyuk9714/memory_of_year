@@ -32,12 +32,25 @@
 ## 📽️ 프로젝트 데모 (GIF)
 
 ### 주요 기능
-| **기능 A: 앨범 생성**                     | **기능 B: 이미지 업로드**                  |
-|------------------------------------------|------------------------------------------|
-| ![앨범 생성](https://github.com/user-attachments/assets/29880bf4-fe0b-4d6e-8473-3ffd1f1deaaf) | ![이미지 업로드](https://github.com/user-attachments/assets/e109d07f-ef0c-4594-ad6b-9a2661512717) |
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/29880bf4-fe0b-4d6e-8473-3ffd1f1deaaf" alt="앨범 생성" width="300">
+    <p>기능 A: 앨범 생성</p>
+  </div>
+  <div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/e109d07f-ef0c-4594-ad6b-9a2661512717" alt="이미지 업로드" width="300">
+    <p>기능 B: 이미지 업로드</p>
+  </div>
+</div>
 
-| **기능 C: 편지 작성**                     | **기능 D: 스티커 관리**                   |
-|------------------------------------------|------------------------------------------|
-| ![편지 작성](https://github.com/user-attachments/assets/a6753028-b951-4c40-8da6-1b573d482818) | ![스티커 관리](https://github.com/user-attachments/assets/17f478c4-8d78-4df3-9562-41607eef195d) |
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/a6753028-b951-4c40-8da6-1b573d482818" alt="편지 작성" width="300">
+    <p>기능 C: 편지 작성</p>
+  </div>
+  <div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/17f478c4-8d78-4df3-9562-41607eef195d" alt="스티커 관리" width="300">
+    <p>기능 D: 스티커 관리</p>
+  </div>
+</div>
 
----
