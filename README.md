@@ -32,7 +32,8 @@
 ## 📽️ 프로젝트 데모 (GIF)
 
 ### 주요 기능
-<div style="display: flex; justify-content: space-around;">
+
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
   <div style="text-align: center;">
     <img src="https://github.com/user-attachments/assets/29880bf4-fe0b-4d6e-8473-3ffd1f1deaaf" alt="앨범 생성" width="300">
     <p>기능 A: 앨범 생성</p>
@@ -41,9 +42,6 @@
     <img src="https://github.com/user-attachments/assets/e109d07f-ef0c-4594-ad6b-9a2661512717" alt="이미지 업로드" width="300">
     <p>기능 B: 이미지 업로드</p>
   </div>
-</div>
-
-<div style="display: flex; justify-content: space-around;">
   <div style="text-align: center;">
     <img src="https://github.com/user-attachments/assets/a6753028-b951-4c40-8da6-1b573d482818" alt="편지 작성" width="300">
     <p>기능 C: 편지 작성</p>
@@ -53,4 +51,3 @@
     <p>기능 D: 스티커 관리</p>
   </div>
 </div>
-
