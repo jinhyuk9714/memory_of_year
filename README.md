@@ -6,12 +6,12 @@
 
 ## 🚀 주요 기능
 - **JWT 토큰**을 활용한 사용자 인증 및 권한 관리
-- 앨범, 사진, 편지, 스티커에 대한 CRUD 기능 제공
+- **앨범, 사진, 편지, 스티커**에 대한 CRUD 기능 제공
 - **AWS S3**를 이용한 미디어 파일의 안전한 저장 및 조회
 - **MySQL**을 이용한 데이터베이스 관리
 - **Swagger**를 통한 API 문서화 및 테스트
 - **AWS EC2**에서 애플리케이션 호스팅
-- **IAM\(Identity and Access Management\)**으로 AWS 리소스 접근 제어
+- **IAM (Identity and Access Management)**으로 AWS 리소스 접근 제어
 
 ---
 
