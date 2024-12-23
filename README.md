@@ -35,21 +35,21 @@
   <tr>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/29880bf4-fe0b-4d6e-8473-3ffd1f1deaaf" alt="앨범 생성" width="300"><br>
-      <b>기능 A: 앨범 생성</b>
+      <b>프로젝트 시작</b>
     </td>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/e109d07f-ef0c-4594-ad6b-9a2661512717" alt="이미지 업로드" width="300"><br>
-      <b>기능 B: 이미지 업로드</b>
+      <b>회원가입 & 로그인</b>
     </td>
   </tr>
   <tr>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/a6753028-b951-4c40-8da6-1b573d482818" alt="편지 작성" width="300"><br>
-      <b>기능 C: 편지 작성</b>
+      <b>앨범 생성</b>
     </td>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/17f478c4-8d78-4df3-9562-41607eef195d" alt="스티커 관리" width="300"><br>
-      <b>기능 D: 스티커 관리</b>
+      <b>편지 생성</b>
     </td>
   </tr>
 </table>
