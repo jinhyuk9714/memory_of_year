@@ -8,11 +8,27 @@
 
 ## 실행 방법
 
+### 로컬 (Gradle)
+
 - **Java 17**, **Gradle** 필요
-- DB·S3는 `application.yml` 또는 환경변수로 설정
 
 ```bash
+# H2 (기본)
 ./gradlew bootRun
+
+# MySQL
+./gradlew bootRun --args='--spring.profiles.active=mysql'
+# 또는 MySQL 실행 후 MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD 환경변수 설정
+```
+
+### Docker
+
+```bash
+# MySQL 연동 (기본)
+docker compose up --build
+
+# H2 전용 (MySQL 없이)
+docker compose -f docker-compose.h2.yml up --build
 ```
 
 실행 후 API 문서: http://localhost:8080/swagger-ui.html
@@ -44,6 +60,8 @@
 | MySQL / H2 | DB (로컬 기본 H2) |
 | AWS S3 | 사진·스티커 저장 |
 | Swagger, Lombok, Gradle | 문서화, 생산성, 빌드 |
+| Docker, GitHub Actions | 컨테이너화, CI |
+| JaCoCo | 테스트 커버리지 |
 
 ---
 
@@ -114,6 +132,11 @@ Before/After 비교: `APP_PERF_USE_N1_LETTERS=true ./gradlew bootRun` 후 04-let
 ### Actuator
 
 `/actuator/health` · `/actuator/metrics` · `/actuator/info`
+
+### CI / 테스트 커버리지
+
+- **GitHub Actions**: push 시 `./gradlew test` 자동 실행
+- **JaCoCo**: `./gradlew test jacocoTestReport` → `build/reports/jacoco/test/html/index.html`
 
 ---
 

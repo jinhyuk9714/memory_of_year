@@ -1,0 +1,10 @@
+# H2 전용 (MySQL 없이 앱만 실행)
+# 사용: docker compose -f docker-compose.h2.yml up --build
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:memdb;DB_CLOSE_DELAY=-1;MODE=MySQL
