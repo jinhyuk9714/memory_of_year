@@ -46,7 +46,7 @@ public class JwtTokenFilter extends GenericFilterBean {
         }
 
         String token = authorizationHeader.substring(7).trim();
-        if (jwtTokenProvider.validateToken(token)) {
+        if (jwtTokenProvider.validateToken(token) && jwtTokenProvider.isTokenNotInvalidated(token)) {
             String username = jwtTokenProvider.getUsername(token);
             UserDetails userDetails = userService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(

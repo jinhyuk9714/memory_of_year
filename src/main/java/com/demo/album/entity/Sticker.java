@@ -1,9 +1,18 @@
 package com.demo.album.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "sticker")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Sticker {
 
     @Id
@@ -11,19 +20,12 @@ public class Sticker {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String fileName; // S3에 저장된 파일 이름
+    private String fileName;
 
     @Column(nullable = false)
-    private String fileUrl; // S3 파일 URL
+    private String fileUrl;
 
     @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
-
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
-    }
 }

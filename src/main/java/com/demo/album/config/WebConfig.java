@@ -1,23 +1,28 @@
 package com.demo.album.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * CORS는 SecurityConfig에서 통합 관리합니다.
+ * 로컬 스티커 리소스가 필요한 경우 application.yml에
+ * app.stickers.local-path 를 설정하면 /stickers/** 에 매핑됩니다.
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Value("${app.stickers.local-path:}")
+    private String stickersLocalPath;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/stickers/**")
-                .addResourceLocations("file:/path/to/stickers/");
-    }
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // 모든 경로에 대해
-                .allowedOrigins("http://localhost:3000") // 3000 포트에서 오는 요청 허용
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
-                .allowedHeaders("*") // 모든 헤더 허용
-                .allowCredentials(true); // 인증 정보(쿠키 등) 허용
+        if (StringUtils.hasText(stickersLocalPath)) {
+            String path = stickersLocalPath.endsWith("/") ? stickersLocalPath : stickersLocalPath + "/";
+            registry.addResourceHandler("/stickers/**")
+                    .addResourceLocations("file:" + path);
+        }
     }
 }

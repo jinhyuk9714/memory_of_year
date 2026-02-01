@@ -1,8 +1,9 @@
 package com.demo.album.service;
 
 import com.demo.album.entity.User;
+import com.demo.album.exception.DuplicateResourceException;
 import com.demo.album.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,8 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -19,7 +21,6 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -27,11 +28,16 @@ public class UserService implements UserDetailsService {
 
     public User registerUser(String username, String password, String nickname, String email) {
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 사용자 이름입니다.");
+            throw new DuplicateResourceException("이미 존재하는 사용자 이름입니다.");
         }
 
-        String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(username, encodedPassword, nickname, email, "USER");
+        User user = User.builder()
+                .username(username)
+                .password(passwordEncoder.encode(password))
+                .nickname(nickname)
+                .email(email)
+                .role("USER")
+                .build();
         return userRepository.save(user);
     }
 
@@ -48,10 +54,14 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
 
+        List<SimpleGrantedAuthority> authorities = Optional.ofNullable(user.getRole())
+                .map(r -> List.of(new SimpleGrantedAuthority("ROLE_" + r)))
+                .orElse(Collections.emptyList());
+
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.emptyList()
+                authorities
         );
     }
 
