@@ -12,7 +12,9 @@ import java.util.List;
  * - 한 앨범에 여러 Letter가 속함 (1:N, cascade로 함께 삭제)
  */
 @Entity
-@Table(name = "album")
+@Table(name = "album", indexes = {
+        @Index(name = "idx_album_owner", columnList = "user_id")
+})
 @Getter
 @Setter
 @NoArgsConstructor

@@ -44,13 +44,11 @@ public class LetterController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(new LetterListResponseDto(letter)));
     }
 
-    /** 앨범별 편지 목록 (LetterListResponseDto 리스트) */
+    /** 앨범별 편지 목록 (LetterListResponseDto 리스트, photoCount 포함) */
     @GetMapping("/{albumId}/letters")
     @Operation(summary = "편지 목록 조회", description = "특정 앨범의 모든 편지를 조회합니다.")
     public ResponseEntity<ApiResponse<List<LetterListResponseDto>>> getLetters(@PathVariable Long albumId) {
-        List<LetterListResponseDto> list = letterService.getLettersByAlbumId(albumId).stream()
-                .map(LetterListResponseDto::new)
-                .toList();
+        List<LetterListResponseDto> list = letterService.getLettersByAlbumIdWithPhotoCount(albumId);
         return ResponseEntity.ok(ApiResponse.success(list));
     }
 

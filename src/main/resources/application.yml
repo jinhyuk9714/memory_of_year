@@ -1,0 +1,52 @@
+# Memory of Year 공통 설정
+# DB: 기본 H2(로컬). MySQL 사용 시 spring.profiles.active=mysql 또는 SPRING_DATASOURCE_URL 설정
+# AWS S3: cloud.aws.* 환경변수로 오버라이드
+
+spring:
+  application:
+    name: memory-of-year
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:memdb;DB_CLOSE_DELAY=-1;MODE=MySQL}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+
+# MySQL 사용 시 (예: application-mysql.yml 또는 env)
+# spring.datasource.url=jdbc:mysql://localhost:3306/memory_of_year
+# spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+# spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+# spring.jpa.hibernate.ddl-auto=update
+
+# AWS S3 (로컬 개발 시 더미 값으로 기동 가능)
+cloud:
+  aws:
+    s3:
+      bucket: ${CLOUD_AWS_S3_BUCKET:local-bucket}
+    region:
+      static: ${CLOUD_AWS_REGION:ap-northeast-2}
+    credentials:
+      access-key: ${CLOUD_AWS_ACCESS_KEY:local}
+      secret-key: ${CLOUD_AWS_SECRET_KEY:local}
+
+# 성능 비교: true이면 편지 목록 API에서 N+1 버전 사용 (Before 측정용)
+app:
+  performance:
+    use-n1-letters: ${APP_PERF_USE_N1_LETTERS:false}
+
+# Actuator: 헬스체크·메트릭 노출 (포트폴리오·모니터링용)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always  # health 상세 노출 (포트폴리오·모니터링용)
+  info:
+    env:
+      enabled: true

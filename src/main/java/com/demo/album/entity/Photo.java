@@ -9,7 +9,9 @@ import lombok.*;
  * - url은 S3 등에 업로드된 이미지 URL
  */
 @Entity
-@Table(name = "photo")
+@Table(name = "photo", indexes = {
+        @Index(name = "idx_photo_letter_id", columnList = "letter_id")
+})
 @Getter
 @Setter
 @NoArgsConstructor

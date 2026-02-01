@@ -59,10 +59,10 @@ public class AlbumService {
         return albumRepository.save(album);
     }
 
-    /** 앨범 조회 + 현재 사용자 소유 여부(isOwnAlbum) 포함 DTO 반환 */
+    /** 앨범 조회 + 현재 사용자 소유 여부(isOwnAlbum) 포함 DTO 반환 (N+1 방지: owner, letters 한 번에 fetch) */
     @Transactional(readOnly = true)
     public AlbumResponseDto getAlbumWithOwnership(Long albumId, Long userId) {
-        Album album = albumRepository.findById(albumId)
+        Album album = albumRepository.findByIdWithOwnerAndLetters(albumId)
                 .orElseThrow(() -> new ResourceNotFoundException("앨범", albumId));
 
         boolean isOwnAlbum = album.getOwner().getUserId().equals(userId);

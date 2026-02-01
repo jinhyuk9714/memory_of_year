@@ -12,7 +12,10 @@ import java.time.LocalDateTime;
  * - 작성 시각은 DB에서 자동 설정(CreationTimestamp)
  */
 @Entity
-@Table(name = "letter")
+@Table(name = "letter", indexes = {
+        @Index(name = "idx_letter_album_id", columnList = "album_id"),
+        @Index(name = "idx_letter_created_at", columnList = "created_at")
+})
 @Getter
 @Setter
 @NoArgsConstructor

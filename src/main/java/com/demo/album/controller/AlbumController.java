@@ -44,7 +44,7 @@ public class AlbumController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "이미 앨범이 존재합니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 스티커 URL")
     })
-    public ResponseEntity<ApiResponse<Album>> createAlbum(
+    public ResponseEntity<ApiResponse<AlbumResponseDto>> createAlbum(
             @Parameter(description = "생성할 앨범 정보", required = true) @RequestBody AlbumCreateRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -55,7 +55,9 @@ public class AlbumController {
             throw new com.demo.album.exception.DuplicateResourceException("이미 앨범이 존재합니다.");
         }
 
-        if (!stickerService.isValidStickerUrl(request.getStickerUrl())) {
+        // stickerUrl이 있으면 허용 목록 검증, 없으면 null로 저장 (로컬/S3 미설정 대응)
+        String stickerUrl = request.getStickerUrl();
+        if (stickerUrl != null && !stickerUrl.isBlank() && !stickerService.isValidStickerUrl(stickerUrl)) {
             throw new InvalidRequestException("유효하지 않은 스티커 URL입니다.");
         }
 
@@ -63,11 +65,20 @@ public class AlbumController {
                 request.getTitle(),
                 request.getAlbumColor(),
                 request.getVisibility(),
-                request.getStickerUrl(),
+                (stickerUrl != null && !stickerUrl.isBlank()) ? stickerUrl : null,
                 user
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(album));
+        AlbumResponseDto dto = new AlbumResponseDto(
+                album.getAlbumId(),
+                album.getTitle(),
+                album.getAlbumColor(),
+                album.isVisibility(),
+                0,  // 새 앨범이므로 편지 0개 (lazy load 회피)
+                album.getStickerUrl(),
+                true  // 생성자는 본인 앨범
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(dto));
     }
 
     /** 앨범 조회. AlbumResponseDto (소유 여부 포함) 반환 */

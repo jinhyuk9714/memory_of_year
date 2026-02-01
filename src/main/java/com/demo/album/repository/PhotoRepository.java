@@ -18,4 +18,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findByLetter_LetterId(Long letterId);
 
     Optional<Photo> findByPhotoIdAndLetter_LetterId(Long photoId, Long letterId);
+
+    /** 편지별 사진 개수 (N+1 해결용 batch 조회) */
+    long countByLetter_LetterId(Long letterId);
 }

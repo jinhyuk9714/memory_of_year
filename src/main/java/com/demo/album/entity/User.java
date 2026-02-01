@@ -9,7 +9,7 @@ import lombok.*;
  * - 로그인 ID(username), 암호화된 비밀번호, 닉네임, 이메일, 역할(role) 보관
  */
 @Entity
-@Table(name = "user")
+@Table(name = "users")  /* "user"는 H2 예약어라 users 사용 */
 @Getter
 @Setter
 @NoArgsConstructor

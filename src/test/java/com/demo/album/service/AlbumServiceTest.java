@@ -135,7 +135,7 @@ class AlbumServiceTest {
         @DisplayName("본인 앨범이면 isOwnAlbum true")
         void ownAlbum() {
             Album album = createAlbum(1L, 1L);
-            when(albumRepository.findById(1L)).thenReturn(Optional.of(album));
+            when(albumRepository.findByIdWithOwnerAndLetters(1L)).thenReturn(Optional.of(album));
 
             AlbumResponseDto dto = albumService.getAlbumWithOwnership(1L, 1L);
 
@@ -147,7 +147,7 @@ class AlbumServiceTest {
         @DisplayName("타인 앨범이면 isOwnAlbum false")
         void otherAlbum() {
             Album album = createAlbum(1L, 1L); // owner userId=1
-            when(albumRepository.findById(1L)).thenReturn(Optional.of(album));
+            when(albumRepository.findByIdWithOwnerAndLetters(1L)).thenReturn(Optional.of(album));
 
             AlbumResponseDto dto = albumService.getAlbumWithOwnership(1L, 2L);
 
@@ -157,7 +157,7 @@ class AlbumServiceTest {
         @Test
         @DisplayName("앨범 없으면 ResourceNotFoundException")
         void notFound() {
-            when(albumRepository.findById(999L)).thenReturn(Optional.empty());
+            when(albumRepository.findByIdWithOwnerAndLetters(999L)).thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> albumService.getAlbumWithOwnership(999L, 1L))
                     .isInstanceOf(ResourceNotFoundException.class);
