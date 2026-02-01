@@ -36,6 +36,71 @@
 
 ---
 
+## 🏗️ 아키텍처
+
+### 시스템 구성
+
+```mermaid
+flowchart LR
+    subgraph Client["클라이언트"]
+        FE[프론트엔드]
+    end
+
+    subgraph Backend["Spring Boot (EC2)"]
+        API[REST API]
+        JWT[JWT 검증]
+        API --> JWT
+    end
+
+    subgraph Data["데이터·스토리지"]
+        MySQL[(MySQL)]
+        S3[(AWS S3)]
+    end
+
+    FE -->|"HTTPS"| API
+    JWT --> MySQL
+    API --> MySQL
+    API --> S3
+```
+
+- 클라이언트(프론트엔드)가 REST API로 요청 → JWT 검증 후 Controller → Service → MySQL/S3 사용.
+
+### 레이어드 아키텍처 (백엔드)
+
+```mermaid
+flowchart TB
+    subgraph Presentation["Presentation Layer"]
+        Controller[Controller]
+    end
+
+    subgraph Business["Business Layer"]
+        Service[Service]
+    end
+
+    subgraph DataAccess["Data Access Layer"]
+        Repository[Repository]
+    end
+
+    subgraph External["External"]
+        DB[(MySQL)]
+        S3[(AWS S3)]
+    end
+
+    Controller --> Service
+    Service --> Repository
+    Service --> S3
+    Repository --> DB
+```
+
+| 레이어 | 역할 |
+|--------|------|
+| **Controller** | HTTP 요청/응답, DTO 변환, 인증 정보 활용 |
+| **Service** | 비즈니스 로직, 트랜잭션, 예외 발생 |
+| **Repository** | JPA로 엔티티 CRUD |
+| **Filter** | JWT 검증·블랙리스트 확인 후 SecurityContext 설정 |
+
+---
+
 ## 📐 ERD (Entity Relationship Diagram)
 
 ```mermaid
@@ -94,6 +159,108 @@ erDiagram
 - **letter** : 편지. 여러 **photo**를 가짐.
 - **photo** : 사진. S3 URL·코멘트·스티커 URL 저장.
 - **sticker** : 스티커 마스터. 앨범·사진의 `sticker_url`은 문자열로 저장되며, 스티커 목록은 S3 폴더와 연동해 사용.
+
+---
+
+## 📊 시퀀스 다이어그램
+
+### 로그인
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant API as UserController
+    participant US as UserService
+    participant UR as UserRepository
+    participant JWT as JwtTokenProvider
+
+    C->>+API: POST /api/auth/login (username, password)
+    API->>+US: authenticateUser(username, password)
+    US->>UR: findByUsername(username)
+    UR-->>US: Optional<User>
+    US->>US: passwordEncoder.matches()
+    US-->>-API: Optional<User>
+    alt 인증 성공
+        API->>JWT: createToken(username)
+        JWT-->>API: token
+        API-->>C: 200 { success, data: { token } }
+    else 인증 실패
+        API-->>C: 401 { success: false, error }
+    end
+```
+
+### 앨범 생성
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant API as AlbumController
+    participant US as UserService
+    participant AS as AlbumService
+    participant SS as StickerService
+    participant AR as AlbumRepository
+
+    C->>+API: POST /api/albums/create (Authorization, body)
+    API->>US: findByUsername(username)
+    US-->>API: User
+    API->>AS: hasAlbum(user)
+    AS->>AR: findByOwner(user)
+    AR-->>AS: Optional
+    AS-->>API: boolean
+    API->>SS: isValidStickerUrl(stickerUrl)
+    SS-->>API: boolean
+    API->>AS: createAlbum(...)
+    AS->>AR: save(album)
+    AR-->>AS: Album
+    AS-->>API: Album
+    API-->>C: 201 { success, data: Album }
+```
+
+### 편지 작성
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant API as LetterController
+    participant LS as LetterService
+    participant AR as AlbumRepository
+    participant LR as LetterRepository
+
+    C->>+API: POST /api/albums/{albumId}/create (body)
+    API->>+LS: createLetter(albumId, LetterRequestDto)
+    LS->>AR: findById(albumId)
+    AR-->>LS: Album
+    LS->>LS: Letter.builder()...build()
+    LS->>LR: save(letter)
+    LR-->>LS: Letter
+    LS-->>-API: Letter
+    API-->>C: 201 { success, data: LetterListResponseDto }
+```
+
+### 사진 업로드
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant API as PhotoController
+    participant PS as PhotoService
+    participant LR as LetterRepository
+    participant S3 as S3Service
+    participant PR as PhotoRepository
+
+    C->>+API: POST /api/letters/{letterId}/photos (multipart)
+    API->>+PS: addPhoto(letterId, file, comment, stickerUrl)
+    PS->>LR: findById(letterId)
+    LR-->>PS: Letter
+    PS->>S3: uploadFile(file)
+    S3->>S3: S3 putObject
+    S3-->>PS: fileUrl
+    PS->>PS: Photo.builder()...build()
+    PS->>PR: save(photo)
+    PR-->>PS: Photo
+    PS-->>-API: Photo
+    API-->>C: 201 { success, data: PhotoResponseDto }
+```
 
 ---
 
