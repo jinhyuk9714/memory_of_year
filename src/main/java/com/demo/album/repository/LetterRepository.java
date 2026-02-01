@@ -6,11 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Letter 엔티티용 JPA Repository
+ * - findByAlbumAlbumId: 앨범별 편지 목록
+ * - findByLetterIdAndAlbumAlbumId: 앨범+편지 ID로 상세 조회 (권한 검증용)
+ */
 public interface LetterRepository extends JpaRepository<Letter, Long> {
 
-    // 특정 앨범의 모든 편지 조회
     List<Letter> findByAlbumAlbumId(Long albumId);
 
-    // 특정 앨범의 특정 편지 조회
     Optional<Letter> findByLetterIdAndAlbumAlbumId(Long letterId, Long albumId);
 }

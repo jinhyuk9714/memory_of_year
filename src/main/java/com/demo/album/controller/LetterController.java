@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 편지 API (앨범별 편지 생성, 목록, 상세)
+ * - /api/albums/{albumId}/create: 편지 작성
+ * - /api/albums/{albumId}/letters: 편지 목록
+ * - /api/albums/{albumId}/letters/{letterId}: 편지 상세
+ */
 @RestController
 @RequestMapping("/api/albums")
 @RequiredArgsConstructor
@@ -23,6 +29,7 @@ public class LetterController {
 
     private final LetterService letterService;
 
+    /** 편지 생성. LetterRequestDto로 제목/작성자/내용/익명/색상 전달 */
     @PostMapping("/{albumId}/create")
     @Operation(summary = "편지 생성", description = "특정 앨범에 새 편지를 작성합니다.")
     @ApiResponses(value = {
@@ -37,6 +44,7 @@ public class LetterController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(new LetterListResponseDto(letter)));
     }
 
+    /** 앨범별 편지 목록 (LetterListResponseDto 리스트) */
     @GetMapping("/{albumId}/letters")
     @Operation(summary = "편지 목록 조회", description = "특정 앨범의 모든 편지를 조회합니다.")
     public ResponseEntity<ApiResponse<List<LetterListResponseDto>>> getLetters(@PathVariable Long albumId) {
@@ -46,6 +54,7 @@ public class LetterController {
         return ResponseEntity.ok(ApiResponse.success(list));
     }
 
+    /** 편지 상세 조회. 없으면 ResourceNotFoundException → 404 */
     @GetMapping("/{albumId}/letters/{letterId}")
     @Operation(summary = "편지 상세 조회", description = "특정 앨범 내 특정 편지의 상세 정보를 조회합니다.")
     @ApiResponses(value = { @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "편지를 찾을 수 없습니다.") })

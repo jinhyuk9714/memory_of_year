@@ -1,0 +1,28 @@
+# 테스트 전용 설정 (공부용: 로컬 테스트 시 DB·S3 대신 인메모리/더미 사용)
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+  # S3 등 외부 의존성은 테스트에서 Mock으로 대체 가능
+
+# 테스트 시 S3 빈이 없을 수 있으므로 더미 값 (실제 호출은 Mock)
+cloud:
+  aws:
+    s3:
+      bucket: test-bucket
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: test-key
+      secret-key: test-secret
+
+# JPA 로깅 최소화
+logging:
+  level:
+    org.hibernate: WARN

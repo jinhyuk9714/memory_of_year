@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 홈 API
+ * - GET /api/home/{albumId}: 앨범 정보 + 내 앨범 여부 + 가능한 액션(viewAlbum/shareLink 또는 writeLetter)
+ */
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class HomeController {
     private final AlbumService albumService;
     private final UserService userService;
 
+    /** 홈 화면: 앨범 정보 + isOwnAlbum + actions(내 앨범이면 viewAlbum/shareLink, 타인 앨범이면 writeLetter) */
     @GetMapping("/home/{albumId}")
     @Operation(summary = "홈 화면 조회", description = "내/타인 앨범 구분하여 홈 정보를 반환합니다.")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getHomePage(

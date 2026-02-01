@@ -19,6 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * 사진 API (편지별 사진 업로드, 목록, 상세)
+ * - multipart/form-data로 파일·코멘트·스티커 URL 전달
+ */
 @RestController
 @RequestMapping("/api/letters/{letterId}/photos")
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class PhotoController {
     private final PhotoService photoService;
     private final StickerService stickerService;
 
+    /** 사진 업로드. 스티커 URL 검증 후 S3 업로드 + Photo 저장 */
     @PostMapping(consumes = {"multipart/form-data"})
     @Operation(summary = "사진 업로드", description = "특정 편지에 사진을 업로드합니다.")
     @ApiResponses({
@@ -47,6 +52,7 @@ public class PhotoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(dto));
     }
 
+    /** 편지별 사진 목록 */
     @GetMapping
     @Operation(summary = "사진 목록 조회", description = "특정 편지에 포함된 모든 사진을 조회합니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "사진 목록 조회 성공")
@@ -59,6 +65,7 @@ public class PhotoController {
         return ResponseEntity.ok(ApiResponse.success(list));
     }
 
+    /** 사진 상세. 없으면 ResourceNotFoundException → 404 */
     @GetMapping("/{photoId}")
     @Operation(summary = "사진 상세 조회", description = "특정 편지 내 특정 사진의 상세 정보를 조회합니다.")
     @ApiResponses({

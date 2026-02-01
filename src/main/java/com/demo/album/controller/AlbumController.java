@@ -22,6 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * 앨범 API (생성, 조회, 수정)
+ * - 인증 필요. @AuthenticationPrincipal로 현재 사용자 조회
+ */
 @RestController
 @RequestMapping("/api/albums")
 @RequiredArgsConstructor
@@ -31,6 +35,7 @@ public class AlbumController {
     private final UserService userService;
     private final StickerService stickerService;
 
+    /** 앨범 생성. 스티커 URL 검증 후 저장. 이미 앨범 있으면 DuplicateResourceException */
     @PostMapping("/create")
     @Operation(summary = "앨범 생성", description = "사용자가 새로운 앨범을 생성합니다.")
     @ApiResponses(value = {
@@ -65,6 +70,7 @@ public class AlbumController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(album));
     }
 
+    /** 앨범 조회. AlbumResponseDto (소유 여부 포함) 반환 */
     @GetMapping("/{albumId}")
     @Operation(summary = "앨범 조회", description = "앨범 ID로 앨범을 조회합니다.")
     @ApiResponses(value = {
@@ -83,6 +89,7 @@ public class AlbumController {
         return ResponseEntity.ok(ApiResponse.success(dto));
     }
 
+    /** 앨범 부분 수정. body에 title, albumColor, visibility, stickerUrl 등 포함 가능 */
     @PutMapping("/{albumId}")
     @Operation(summary = "앨범 업데이트", description = "앨범 ID로 앨범 정보를 업데이트합니다.")
     @ApiResponses(value = {

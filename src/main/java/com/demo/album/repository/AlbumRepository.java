@@ -6,10 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+/**
+ * Album 엔티티용 JPA Repository
+ * - findByOwner: 소유자별 앨범 조회 (1인 1앨범 여부 확인용)
+ */
 public interface AlbumRepository extends JpaRepository<Album, Long> {
-    // 특정 소유자가 가진 앨범을 찾는 메서드
+
     Optional<Album> findByOwner(User owner);
 
-    // 앨범 ID와 소유자 정보로 앨범을 찾는 메서드
     Optional<Album> findByAlbumIdAndOwner(Long albumId, User owner);
 }

@@ -8,6 +8,11 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+/**
+ * AWS S3 클라이언트 설정
+ * - application.yml의 cloud.aws.* 값으로 리전·자격증명 설정
+ * - S3Service에서 파일 업로드·목록 조회 등에 사용
+ */
 @Configuration
 public class S3Config {
 
