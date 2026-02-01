@@ -1,8 +1,33 @@
 # Memory of Year (백엔드)
 
+[![CI](https://github.com/jinhyuk9714/memory_of_year/actions/workflows/ci.yml/badge.svg)](https://github.com/jinhyuk9714/memory_of_year/actions)
+![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk)
+![Spring Boot 3](https://img.shields.io/badge/Spring%20Boot-3.3-6DB33F?logo=springboot)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
+
 앨범·편지·사진·스티커를 관리하는 REST API 백엔드입니다.
 
 **멋쟁이사자처럼 12기** 팀 **멋삼핑** | 디자인 1명, 프론트 2명, 백엔드 4명
+
+### 포트폴리오 핵심
+
+- **N+1 최적화**: 편지 목록 API 쿼리 31회 → 1회, p95 응답시간 **40% 개선**
+- **부하 테스트**: k6로 회원가입·로그인·앨범·편지 API 성능 측정
+- **Docker·MySQL**: `docker compose up` 한 번에 실행 환경 구성
+- **CI/CD**: GitHub Actions로 push 시 자동 테스트, JaCoCo 커버리지 리포트
+
+<details>
+<summary>목차</summary>
+
+- [실행 방법](#실행-방법)
+- [주요 기능](#주요-기능)
+- [사용 기술](#사용-기술)
+- [성능 테스트](#성능-테스트)
+- [아키텍처](#아키텍처)
+- [ERD](#erd)
+
+</details>
 
 <table>
   <tr>

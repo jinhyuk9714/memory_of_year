@@ -1,32 +1,21 @@
 # 부하 테스트 (k6)
 
-포트폴리오용 성능 테스트 스크립트입니다.
+API 성능 측정 및 N+1 Before/After 비교용 스크립트입니다.
 
-## k6 설치
+## 사전 요구사항
 
-```bash
-# macOS (Homebrew)
-brew install k6
+- [k6 설치](https://k6.io/docs/getting-started/installation/) (macOS: `brew install k6`)
+- 서버 실행 중 (`./gradlew bootRun` 또는 `docker compose up`)
 
-# 또는 공식 사이트
-# https://k6.io/docs/getting-started/installation/
-```
+## 스크립트
 
-## 실행 방법
-
-### 1. 서버 기동
-
-```bash
-./gradlew bootRun
-```
-
-### 2. 스모크 테스트 (전체 플로우 1회)
+### 스모크 테스트 (전체 플로우 1회)
 
 ```bash
 k6 run load-test/00-smoke.js
 ```
 
-### 3. 회원가입 부하 테스트
+### 회원가입 부하 테스트
 
 ```bash
 k6 run load-test/01-register.js
@@ -38,29 +27,19 @@ k6 run load-test/01-register.js
 k6 run --vus 50 --duration 1m load-test/01-register.js
 ```
 
-### 4. 로그인 부하 테스트
-
-사전에 테스트 계정 생성:
+### 로그인 부하 테스트
 
 ```bash
-curl -X POST http://localhost:8080/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"loadtest","password":"pass123","nickname":"테스트","email":"load@test.com"}'
+k6 run load-test/02-login.js   # setup에서 자동 계정 생성
 ```
 
-실행:
-
-```bash
-k6 run load-test/02-login.js
-```
-
-### 5. 앨범 조회 부하 테스트
+### 앨범 조회 부하 테스트
 
 ```bash
 k6 run load-test/03-album-get.js   # setup에서 자동으로 회원가입·로그인·앨범 생성
 ```
 
-### 6. 편지 목록 부하 테스트 (N+1 Before/After 비교용)
+### 편지 목록 부하 테스트 (N+1 비교용)
 
 편지 30개 앨범을 만들어 편지 목록 조회 부하를 측정합니다.
 
