@@ -13,6 +13,31 @@ Memory of Year는 **멋쟁이사자처럼 12기 팀 멋삼핑에서 7인 팀 프
 | 팀 구성 | 7명: 디자인 1명, 프론트엔드 2명, 백엔드 4명 |
 | 백엔드 범위 | REST API, JWT 인증, S3 업로드, DB 조회 최적화, k6 부하 테스트 |
 
+## 서비스 화면
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/29880bf4-fe0b-4d6e-8473-3ffd1f1deaaf" alt="프로젝트 시작 화면" width="300"><br>
+      <b>프로젝트 시작</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/e109d07f-ef0c-4594-ad6b-9a2661512717" alt="회원가입과 로그인 화면" width="300"><br>
+      <b>회원가입 & 로그인</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/a6753028-b951-4c40-8da6-1b573d482818" alt="앨범 생성 화면" width="300"><br>
+      <b>앨범 생성</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/17f478c4-8d78-4df3-9562-41607eef195d" alt="편지 생성 화면" width="300"><br>
+      <b>편지 생성</b>
+    </td>
+  </tr>
+</table>
+
 ## 문제 의식
 
 추억을 앨범 단위로 모으는 서비스에서는 사용자 인증, 미디어 업로드, 앨범별 편지/사진 조회가 함께 동작해야 합니다. 이 저장소는 그 흐름을 REST API로 나누고, 목록 조회에서 발생할 수 있는 N+1 쿼리를 줄이는 방식까지 함께 정리합니다.
@@ -98,7 +123,26 @@ k6 run load-test/03-album-get.js
 k6 run load-test/04-letters.js
 ```
 
-기존 README와 `load-test/README.md`에는 편지 목록 조회의 photo count 계산을 서브쿼리 기반 조회로 줄인 비교 기록이 정리되어 있습니다.
+### 부하 테스트 결과
+
+원본 README에 남아 있던 k6 측정값 기준입니다.
+
+| API | VU | RPS | p95 | 실패율 |
+| --- | --- | --- | --- | --- |
+| 회원가입 | 10 | 16.5 | 115ms | 0% |
+| 로그인 | 20 | 49.7 | 116ms | 0% |
+| 앨범 조회 | 30 | 143.7 | 12.9ms | 0% |
+| 편지 목록 (30개) | 20 | 96.7 | 13.8ms | 0% |
+
+### N+1 개선 기록
+
+편지 30개와 `photoCount`를 함께 조회할 때, 사진 수 계산을 서브쿼리 기반 조회로 바꿔 쿼리 수와 응답 시간을 줄였습니다.
+
+| 구분 | Before | After |
+| --- | --- | --- |
+| DB 쿼리 | 31회 (1+N) | 1회 |
+| p95 | 22.8ms | 13.8ms (40% 개선) |
+| 평균 | 11.5ms | 6.7ms (42% 개선) |
 
 ## 참고 사항
 
